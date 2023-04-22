@@ -11,7 +11,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateListOf
@@ -20,9 +19,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import io.github.takusan23.radiologcat.LogCatTool
 import io.github.takusan23.radiologcat.R
+import io.github.takusan23.radiologcat.ui.component.SearchableTopBar
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -32,29 +32,40 @@ fun MainScreen() {
     val scope = rememberCoroutineScope()
     val scrollState = rememberLazyListState()
     val isActive = remember { mutableStateOf(false) }
+    val isSearchMode = remember { mutableStateOf(false) }
+    val searchWord = remember { mutableStateOf("") }
 
-    LaunchedEffect(key1 = isActive.value) {
+    LaunchedEffect(isActive.value) {
         if (isActive.value) {
             LogCatTool.listenLogcat()
+                .filter { it.message.contains(searchWord.value) }
                 .collect { logList.add(0, it) }
         }
     }
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text(text = stringResource(id = R.string.app_name)) },
-                actions = {
-                    IconButton(onClick = {
-                        scope.launch {
-                            scrollState.scrollToItem(0)
-                        }
-                    }) { Icon(painter = painterResource(id = R.drawable.outline_vertical_align_top_24), contentDescription = null) }
-                    IconButton(onClick = {
-                        isActive.value = !isActive.value
-                    }) { Icon(painter = painterResource(id = if (isActive.value) R.drawable.baseline_pause_circle_outline_24 else R.drawable.outline_play_circle_outline_24), contentDescription = null) }
-                }
-            )
+            SearchableTopBar(
+                isSearch = isSearchMode.value,
+                onSearchChange = { isSearchMode.value = false },
+                searchWord = searchWord.value,
+                onSearchWordChange = { searchWord.value = it }
+            ) {
+                IconButton(onClick = {
+                    isSearchMode.value = true
+                }) { Icon(painter = painterResource(id = R.drawable.outline_search_24), contentDescription = null) }
+                IconButton(onClick = {
+                    scope.launch {
+                        scrollState.scrollToItem(0)
+                    }
+                }) { Icon(painter = painterResource(id = R.drawable.outline_vertical_align_top_24), contentDescription = null) }
+                IconButton(onClick = {
+                    logList.clear()
+                }) { Icon(painter = painterResource(id = R.drawable.outline_delete_24), contentDescription = null) }
+                IconButton(onClick = {
+                    isActive.value = !isActive.value
+                }) { Icon(painter = painterResource(id = if (isActive.value) R.drawable.baseline_pause_circle_outline_24 else R.drawable.outline_play_circle_outline_24), contentDescription = null) }
+            }
         }
     )
     {
