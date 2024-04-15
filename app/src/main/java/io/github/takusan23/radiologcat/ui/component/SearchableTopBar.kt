@@ -40,7 +40,7 @@ fun SearchableTopBar(
             color = MaterialTheme.colorScheme.surfaceColorAtElevation(5.dp)
         ) {
             Row(
-                modifier = modifier.padding(5.dp),
+                modifier = Modifier.padding(5.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 val color = MaterialTheme.colorScheme.primary
