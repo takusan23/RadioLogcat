@@ -13,4 +13,4 @@ dependencyResolutionManagement {
     }
 }
 rootProject.name = "RadioLogcat"
-include ':app'
+include(":app")
