@@ -3,6 +3,7 @@ package io.github.takusan23.radiologcat.ui.component
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -12,6 +13,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -35,7 +37,9 @@ fun SearchableTopBar(
 ) {
     if (isSearch) {
         Surface(
-            modifier = modifier.padding(5.dp),
+            modifier = modifier
+                .windowInsetsPadding(TopAppBarDefaults.windowInsets)
+                .padding(5.dp),
             shape = RoundedCornerShape(50),
             color = MaterialTheme.colorScheme.surfaceColorAtElevation(5.dp)
         ) {

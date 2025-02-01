@@ -3,8 +3,6 @@ package io.github.takusan23.radiologcat.ui.screen
 import android.provider.MediaStore
 import android.widget.Toast
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -14,7 +12,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateListOf
@@ -82,7 +79,6 @@ fun MainScreen() {
     Scaffold(
         topBar = {
             SearchableTopBar(
-                modifier = Modifier.windowInsetsPadding(TopAppBarDefaults.windowInsets),
                 isSearch = isSearchMode.value,
                 onSearchChange = { isSearchMode.value = false },
                 searchWord = searchWord.value,
@@ -108,10 +104,10 @@ fun MainScreen() {
             }
         }
     )
-    {
+    { innerPadding ->
         LazyColumn(
-            modifier = Modifier.padding(it),
-            state = scrollState
+            state = scrollState,
+            contentPadding = innerPadding
         ) {
             items(logList) { log ->
                 Text(text = "${log.date} ${log.time}")
